@@ -1,0 +1,30 @@
+name: Build TeknoParrotUI
+
+on:
+  push:
+    branches: ["master"]
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+
+      - uses: nuget/setup-nuget@v2
+
+      - uses: microsoft/setup-msbuild@v2
+
+      - run: |
+          nuget restore TeknoParrotUI.sln
+          msbuild TeknoParrotUI.sln /p:Configuration=Release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: TeknoParrotUI
+          path: bin\x86\Release
